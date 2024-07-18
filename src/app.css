@@ -1,8 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 button {
-  @apply bg-[#d6dcef] rounded-full w-14 h-14 shadow-md ;
+  @apply bg-[#d6dcef] rounded-full min-w-14 h-14 shadow-md flex items-center justify-center hover:scale-90 transition-all;
 }
 
+body {
+  font-family: "Lora", serif;
+}
