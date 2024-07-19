@@ -6,12 +6,10 @@
     import Addition from "$lib/icons/Addition.svelte";
 
     let equation: string = "";
-    let errorMessage: string = "";
 
     function addToEquation(val: string) {
         equation += val;
     }
-
     function backspace() {
         equation = equation.substring(0, equation.length - 1);
         switch (equation.substring(equation.length - 3, equation.length)) {
@@ -32,21 +30,7 @@
     }
 
     function solve() {
-        try {
-            equation = eval?.(equation);
-        } catch (error) {
-            errorMessage = 'Invalid Equation'; // Set the error message
-            let output = document.getElementById('output');
-            if (output) {
-                output.classList.add('bg-red-500');
-                setTimeout(() => {
-                    output.classList.remove('bg-red-500');
-                    errorMessage = ''; // Clear the error message after 1 second
-                    equation = ''; // Clear the equation
-                    output.focus(); // Refocus on the output element
-                }, 1000);
-            }
-        }
+        equation = eval?.(equation);
     }
 </script>
 
@@ -59,7 +43,6 @@
     grid grid-cols-4 gap-1 p-6 font-semibold text-3xl shadow-2xl "
 >
     <div
-        id="output"
         class="
             bg-blue-600
             rounded-xl
@@ -73,61 +56,63 @@
             break-all
             "
     >
-        {errorMessage || equation}
+        {equation}
     </div>
     <button
         on:click={clear}
-        class="bg-slate-950 rounded-full w-14 h-14 text-white text-lg">AC</button
+        class="bg-slate-950 rounded-full w-14 h-14 text-white">AC</button
     >
     <button
         on:click={() => backspace()}
-        class="bg-slate-100 rounded-full w-14 h-14 text-gray-600 text-lg"
+        class="bg-slate-100 rounded-full w-14 h-14 text-gray-600"
     >
         <Delete />
     </button>
     <button
         on:click={() => addToEquation(" / 100 ")}
-        class="bg-slate-100 rounded-full w-14 h-14 text-gray-600 text-lg">%</button
+        class="bg-slate-100 rounded-full w-14 h-14 text-gray-600">%</button
     >
     <button
         on:click={() => addToEquation(" + ")}
-        class="bg-green-500 rounded-full w-14 h-14 text-white text-lg"
+        class="bg-green-500 rounded-full w-14 h-14 text-white"
     >
         <Addition />
     </button>
-    <button on:click={() => addToEquation("7")} class="text-gray-600 text-lg">7</button>
-    <button on:click={() => addToEquation("8")} class="text-gray-600 text-lg">8</button>
-    <button on:click={() => addToEquation("9")} class="text-gray-600 text-lg">9</button>
+    <button on:click={() => addToEquation("7")} class="text-gray-600">7</button>
+    <button on:click={() => addToEquation("8")} class="text-gray-600">8</button>
+    <button on:click={() => addToEquation("9")} class="text-gray-600">9</button>
     <button
         on:click={() => addToEquation(" - ")}
-        class="bg-red-500 rounded-full w-14 h-14 text-white text-lg"
+        class="bg-red-500 rounded-full w-14 h-14 text-white"
     >
         <Minus />
     </button>
-    <button on:click={() => addToEquation("4")} class="text-gray-600 text-lg">4</button>
-    <button on:click={() => addToEquation("5")} class="text-gray-600 text-lg">5</button>
-    <button on:click={() => addToEquation("6")} class="text-gray-600 text-lg">6</button>
+    <button on:click={() => addToEquation("4")} class="text-gray-600">4</button>
+    <button on:click={() => addToEquation("5")} class="text-gray-600">5</button>
+    <button on:click={() => addToEquation("6")} class="text-gray-600">6</button>
 
     <button
         on:click={() => addToEquation(" / ")}
-        class="bg-blue-700 rounded-full w-14 h-14 text-white text-lg"
+        class="bg-blue-700 rounded-full w-14 h-14 text-white"
     >
         <Division />
     </button>
 
-    <button on:click={() => addToEquation("1")} class="text-gray-600 text-lg">1</button>
-    <button on:click={() => addToEquation("2")} class="text-gray-600 text-lg">2</button>
-    <button on:click={() => addToEquation("3")} class="text-gray-600 text-lg">3</button>
+    <button on:click={() => addToEquation("1")} class="text-gray-600">1</button>
+    <button on:click={() => addToEquation("2")} class="text-gray-600">2</button>
+    <button on:click={() => addToEquation("3")} class="text-gray-600">3</button>
     <button
         on:click={() => addToEquation(" * ")}
-        class="bg-yellow-400 rounded-full w-14 h-14 text-white text-lg"
+        class="bg-yellow-400 rounded-full w-14 h-14 text-white"
     >
         <Multiplication />
     </button>
-    <button on:click={() => addToEquation(" . ")} class="text-gray-600 text-lg">.</button>
-    <button on:click={() => addToEquation("0")} class="text-gray-600 text-lg">0</button>
+    <button on:click={() => addToEquation(" . ")} class="text-gray-600"
+        >.</button
+    >
+    <button on:click={() => addToEquation("0")} class="text-gray-600">0</button>
     <button
         on:click={solve}
-        class="bg-slate-100 rounded-full col-span-2 text-gray-600 text-lg">=</button
+        class="bg-slate-100 rounded-full col-span-2 text-gray-600">=</button
     >
 </div>
