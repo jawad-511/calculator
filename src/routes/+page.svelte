@@ -6,10 +6,12 @@
     import Addition from "$lib/icons/Addition.svelte";
 
     let equation: string = "";
+    let errorMessage: string = "";
 
     function addToEquation(val: string) {
         equation += val;
     }
+
     function backspace() {
         equation = equation.substring(0, equation.length - 1);
         switch (equation.substring(equation.length - 3, equation.length)) {
@@ -30,7 +32,23 @@
     }
 
     function solve() {
-        equation = eval?.(equation);
+        try {
+           let answer = eval?.(equation);
+           if(answer == undefined) throw SyntaxError;
+           equation = answer
+        } catch (error) {
+            errorMessage = "Invalid Equation"; // Set the error message
+            let output = document.getElementById("output");
+            if (output) {
+                output.classList.add("bg-red-500");
+                setTimeout(() => {
+                    output.classList.remove("bg-red-500");
+                    errorMessage = ""; // Clear the error message after 1 second
+                    equation = ""; // Clear the equation
+                    output.focus(); // Refocus on the output element
+                }, 1000);
+            }
+        }
     }
 </script>
 
@@ -39,10 +57,11 @@
 </svelte:head>
 
 <div
-    class="bg-white min-h-[30rem] w-[20rem] rounded-3xl 
-    grid grid-cols-4 gap-1 p-6 font-semibold text-3xl shadow-2xl "
+    class="bg-white min-h-[30rem] w-[20rem] rounded-3xl
+    grid grid-cols-4 gap-1 p-6 font-semibold text-3xl shadow-2xl"
 >
     <div
+        id="output"
         class="
             bg-blue-600
             rounded-xl
@@ -54,9 +73,10 @@
             text-white
             text-lg
             break-all
+            transition-all
             "
     >
-        {equation}
+        {errorMessage || equation}
     </div>
     <button
         on:click={clear}
