@@ -4,20 +4,24 @@
     import Division from "$lib/icons/Division.svelte";
     import Multiplication from "$lib/icons/Multiplication.svelte";
     import Addition from "$lib/icons/Addition.svelte";
+    import { evaluate } from 'mathjs';
 
     let equation: string = "";
 
-    function addToEquation(val: string) {
-        equation += val;
-    }
-    function backspace() {
-        equation = equation.substring(0, equation.length - 1);
-        switch (equation.substring(equation.length - 3, equation.length)) {
+    //add dark mode
+  function addToEquation(value: string) {
+    
+    equation += convertSpecialChars(value);
+    
+  }
+    function backspace() { 
+        
+        switch (equation.substring(equation.length - 3 , equation.length)) {
             case " / ":
             case " * ":
             case " + ":
             case " - ":
-                equation = equation.substring(0, equation.length - 3);
+                equation = equation.substring(0, equation.length - 3);// 
                 break;
 
             default:
@@ -25,13 +29,53 @@
         }
     }
 
+
     function clear() {
         equation = "";
     }
 
     function solve() {
-        equation = eval?.(equation);
+    try {
+    
+      equation = evaluate(equation).toString();
+     
+    
+      
+    } catch (error) {
+        equation = 'Invalid Equation';
+      let output = document.getElementById('output');
+        output?.classList.add('bg-red-500')
+       setTimeout(() => {output?.classList.remove('bg-red-500');
+       }, 1000);
+
+      clearErrorMessage();
+
+      
+       
+     }
+  }
+
+      function clearErrorMessage(){
+        setTimeout(() => {equation = "";} , 1000);
+      }
+
+      function convertSpecialChars(char: string): string {
+    switch(char) {
+   
+    case ' ÷ ':
+      return ' / ';
+    case 'x':
+      return '*';
+    case '−':
+      return '-';
+    case '+':
+      return '+';
+    default:
+      return char;
     }
+
+  }
+
 </script>
 
 <svelte:head>
@@ -40,10 +84,12 @@
 
 <div
     class="bg-white min-h-[30rem] w-[20rem] rounded-3xl 
-    grid grid-cols-4 gap-1 p-6 font-semibold text-3xl shadow-2xl "
+    grid grid-cols-4 gap-1 p-6 font-semibold text-3xl shadow-2xl  "
 >
     <div
+        id='output'
         class="
+            
             bg-blue-600
             rounded-xl
             col-span-4
@@ -69,7 +115,7 @@
         <Delete />
     </button>
     <button
-        on:click={() => addToEquation(" / 100 ")}
+        on:click={() => addToEquation(" % ")}
         class="bg-slate-100 rounded-full w-14 h-14 text-gray-600">%</button
     >
     <button
@@ -92,7 +138,7 @@
     <button on:click={() => addToEquation("6")} class="text-gray-600">6</button>
 
     <button
-        on:click={() => addToEquation(" / ")}
+        on:click={() => addToEquation(" ÷ ")}
         class="bg-blue-700 rounded-full w-14 h-14 text-white"
     >
         <Division />
@@ -107,7 +153,7 @@
     >
         <Multiplication />
     </button>
-    <button on:click={() => addToEquation(" . ")} class="text-gray-600"
+    <button on:click={() => addToEquation(".")} class="text-gray-600"
         >.</button
     >
     <button on:click={() => addToEquation("0")} class="text-gray-600">0</button>
